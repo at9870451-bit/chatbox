@@ -102,7 +102,7 @@ jobs:
             appName: '${APP_NAME}',
             webDir: '${WEB_DIR}',
             ios: {
-              contentInset: 'always',
+              contentInset: 'never',
               limitsNavigationsToAppBoundDomains: false,
             },
           }
