@@ -1,0 +1,258 @@
+name: Build iOS IPA
+
+# 用法：仓库 → Actions → Build iOS IPA → Run workflow
+# 不填任何 secret 时产出「未签名 ipa」（需自签/sideload 安装）
+# 配好 4 个 secret 后自动产出可安装的签名 ipa
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: '要打包的 tag / 分支'
+        required: true
+        default: 'v1.23.5'
+      app_id:
+        description: 'Bundle Identifier'
+        required: true
+        default: 'xyz.chatboxapp.app'
+      app_name:
+        description: 'App 显示名称'
+        required: true
+        default: 'Chatbox'
+      export_method:
+        description: '导出方式（仅签名时生效）'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - ad-hoc
+          - app-store
+
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 90
+
+    env:
+      APP_ID: ${{ inputs.app_id }}
+      APP_NAME: ${{ inputs.app_name }}
+      WEB_DIR: release/app/dist/renderer
+      # secrets 无法直接在 step 的 if 里引用，先转成普通 env 再判断
+      HAS_CERT: ${{ secrets.BUILD_CERTIFICATE_BASE64 != '' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 1
+
+      - name: Select newest Xcode
+        run: |
+          set -euo pipefail
+          XCODE_APP=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
+          echo "Using $XCODE_APP"
+          sudo xcode-select -s "$XCODE_APP"
+          xcodebuild -version
+          xcodebuild -showsdks | grep -i iphoneos || true
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+          run_install: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+          cache: 'pnpm'
+
+      - name: Ensure CocoaPods
+        run: |
+          set -euo pipefail
+          if ! command -v pod >/dev/null 2>&1; then
+            brew install cocoapods
+          fi
+          pod --version
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 仓库没有 ios/ 原生工程，也没有 capacitor.config.ts
+      # 所以这里合成一份，让 cap add ios 能生成 Xcode 工程
+      - name: Generate capacitor.config.ts
+        run: |
+          set -euo pipefail
+          cat > capacitor.config.ts <<EOF
+          import type { CapacitorConfig } from '@capacitor/cli'
+
+          const config: CapacitorConfig = {
+            appId: '${APP_ID}',
+            appName: '${APP_NAME}',
+            webDir: '${WEB_DIR}',
+            ios: {
+              contentInset: 'always',
+              limitsNavigationsToAppBoundDomains: false,
+            },
+          }
+
+          export default config
+          EOF
+          cat capacitor.config.ts
+
+      - name: Build renderer (mobile_app / ios)
+        env:
+          CHATBOX_BUILD_TARGET: mobile_app
+          CHATBOX_BUILD_PLATFORM: ios
+          NODE_OPTIONS: --max-old-space-size=6144
+        run: |
+          set -euo pipefail
+          pnpm run build:renderer
+          pnpm run delete-sourcemaps
+          test -f "$WEB_DIR/index.html"
+          du -sh "$WEB_DIR"
+
+      - name: Add iOS platform
+        run: |
+          set -euo pipefail
+          pnpm exec cap add ios
+          ls -la ios/App
+
+      - name: Generate app icons & splash
+        continue-on-error: true
+        run: npx capacitor-assets generate --ios
+
+      - name: Sync web assets into iOS project
+        run: |
+          set -euo pipefail
+          pnpm exec cap sync ios
+          ( cd ios/App && pod install --repo-update )
+
+      # ---------- 未签名构建 ----------
+      - name: Archive (unsigned)
+        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 == '' }}
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$PWD/build/App.xcarchive" \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_ENTITLEMENTS="" \
+            archive
+
+      - name: Package unsigned IPA
+        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 == '' }}
+        run: |
+          set -euo pipefail
+          APP_PATH="build/App.xcarchive/Products/Applications/App.app"
+          test -d "$APP_PATH"
+          mkdir -p build/Payload
+          cp -R "$APP_PATH" build/Payload/
+          ( cd build && zip -qry Chatbox-unsigned.ipa Payload )
+          ls -lh build/Chatbox-unsigned.ipa
+
+      # ---------- 签名构建（需配置 secrets） ----------
+      - name: Install signing certificate & profile
+        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 != '' }}
+        env:
+          CERT_B64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          CERT_PWD: ${{ secrets.P12_PASSWORD }}
+          PROFILE_B64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+          KEYCHAIN_PWD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          set -euo pipefail
+          KEYCHAIN="$RUNNER_TEMP/build.keychain-db"
+          echo "$CERT_B64" | base64 -d > "$RUNNER_TEMP/cert.p12"
+          security create-keychain -p "$KEYCHAIN_PWD" "$KEYCHAIN"
+          security set-keychain-settings -lut 3600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PWD" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/cert.p12" -k "$KEYCHAIN" -P "$CERT_PWD" \
+            -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k "$KEYCHAIN_PWD" "$KEYCHAIN"
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$PROFILE_B64" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+
+      - name: Archive (signed)
+        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 != '' }}
+        env:
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          EXPORT_METHOD: ${{ inputs.export_method }}
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$PWD/build/App.xcarchive" \
+            DEVELOPMENT_TEAM="$TEAM_ID" \
+            -allowProvisioningUpdates \
+            archive
+
+      - name: Export signed IPA
+        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 != '' }}
+        env:
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          EXPORT_METHOD: ${{ inputs.export_method }}
+        run: |
+          set -euo pipefail
+          cat > build/ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>${EXPORT_METHOD}</string>
+            <key>teamID</key><string>${TEAM_ID}</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>stripSwiftSymbols</key><true/>
+            <key>compileBitcode</key><false/>
+          </dict>
+          </plist>
+          EOF
+          xcodebuild -exportArchive \
+            -archivePath "$PWD/build/App.xcarchive" \
+            -exportPath "$PWD/build/export" \
+            -exportOptionsPlist build/ExportOptions.plist
+          ls -lh build/export
+
+      - name: Collect artifacts
+        if: always()
+        run: |
+          mkdir -p dist
+          find build -name "*.ipa" -exec cp {} dist/ \; 2>/dev/null || true
+          ls -lh dist || true
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chatbox-ios-${{ inputs.ref }}
+          path: dist/*.ipa
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload build logs
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: build-logs
+          path: |
+            build/*.xcarchive/Info.plist
+            ~/Library/Logs/gym/*.log
+          if-no-files-found: ignore
+          retention-days: 7
