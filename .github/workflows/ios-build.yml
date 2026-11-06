@@ -7,6 +7,10 @@ name: Build iOS IPA
 on:
   workflow_dispatch:
     inputs:
+      source_repo:
+        description: '源码仓库（fork 不含 tag，默认从上游拉）'
+        required: true
+        default: 'chatboxai/chatbox'
       ref:
         description: '要打包的 tag / 分支'
         required: true
@@ -49,6 +53,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          repository: ${{ inputs.source_repo }}
           ref: ${{ inputs.ref }}
           fetch-depth: 1
 
