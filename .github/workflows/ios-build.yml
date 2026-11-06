@@ -119,7 +119,8 @@ jobs:
         run: |
           set -euo pipefail
           pnpm run build:renderer
-          pnpm run delete-sourcemaps
+          # 上游 package.json 指向的 delete-source-maps-runner.js 在 v1.23.5 中不存在，改用 find
+          find "$WEB_DIR" -name "*.map" -delete
           test -f "$WEB_DIR/index.html"
           du -sh "$WEB_DIR"
 
