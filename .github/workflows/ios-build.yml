@@ -136,7 +136,7 @@ jobs:
 
       # ---------- 未签名构建 ----------
       - name: Archive (unsigned)
-        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 == '' }}
+        if: env.HAS_CERT != 'true'
         run: |
           set -euo pipefail
           xcodebuild \
@@ -153,7 +153,7 @@ jobs:
             archive
 
       - name: Package unsigned IPA
-        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 == '' }}
+        if: env.HAS_CERT != 'true'
         run: |
           set -euo pipefail
           APP_PATH="build/App.xcarchive/Products/Applications/App.app"
@@ -165,7 +165,7 @@ jobs:
 
       # ---------- 签名构建（需配置 secrets） ----------
       - name: Install signing certificate & profile
-        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 != '' }}
+        if: env.HAS_CERT == 'true'
         env:
           CERT_B64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           CERT_PWD: ${{ secrets.P12_PASSWORD }}
@@ -187,7 +187,7 @@ jobs:
           echo "$PROFILE_B64" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
 
       - name: Archive (signed)
-        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 != '' }}
+        if: env.HAS_CERT == 'true'
         env:
           TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           EXPORT_METHOD: ${{ inputs.export_method }}
@@ -205,7 +205,7 @@ jobs:
             archive
 
       - name: Export signed IPA
-        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 != '' }}
+        if: env.HAS_CERT == 'true'
         env:
           TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           EXPORT_METHOD: ${{ inputs.export_method }}
