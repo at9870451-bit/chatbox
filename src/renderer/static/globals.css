@@ -1,95 +1,65 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  /* radius */
-  --chatbox-radius-none: 0rem;
-  --chatbox-radius-xs: 0.125rem;
-  --chatbox-radius-sm: 0.25rem;
-  --chatbox-radius-md: 0.5rem;
-  --chatbox-radius-lg: 1rem;
-  --chatbox-radius-xl: 1.5rem;
-  --chatbox-radius-xxl: 2rem;
-
-  /* spacing */
-  --chatbox-spacing-none: 0rem;
-  --chatbox-spacing-3xs: 0.125rem;
-  --chatbox-spacing-xxs: 0.25rem;
-  --chatbox-spacing-xs: 0.5rem;
-  --chatbox-spacing-sm: 0.75rem;
-  --chatbox-spacing-md: 1rem;
-  --chatbox-spacing-lg: 1.25rem;
-  --chatbox-spacing-xl: 1.5rem;
-  --chatbox-spacing-xxl: 2rem;
-}
-
 :root {
   /* colors */
-  --chatbox-tint-primary: #212529;
-  --chatbox-tint-secondary: #495057;
-  --chatbox-tint-tertiary: #868e96;
+  --chatbox-tint-primary: #1D1D1F;
+  --chatbox-tint-secondary: #86868B;
+  --chatbox-tint-tertiary: #86868B;
 
   --chatbox-tint-white: #ffffff;
   --chatbox-tint-black: #000000;
-  --chatbox-tint-gray: #868e96;
+  --chatbox-tint-gray: #86868B;
 
-  --chatbox-tint-disabled: #adb5bd;
-  --chatbox-brand: #228be6;
+  --chatbox-tint-disabled: #AEAEB2;
+  --chatbox-brand: #007AFF;
   --chatbox-tint-brand: var(--chatbox-brand);
-  --chatbox-tint-placeholder: #adb5bd;
-  --chatbox-tint-error: #fa5252;
-  --chatbox-tint-error-disabled: #ff8787;
-  --chatbox-tint-warning: #fab005;
-  --chatbox-tint-success: #12b886;
+  --chatbox-tint-placeholder: #AEAEB2;
+  --chatbox-tint-error: #FF3B30;
+  --chatbox-tint-error-disabled: #FF6961;
+  --chatbox-tint-warning: #FF9F0A;
+  --chatbox-tint-success: #34C759;
 
-  --chatbox-border-primary: #dee2e6;
-  --chatbox-border-secondary: #ced4da;
+  --chatbox-border-primary: #E5E5EA;
+  --chatbox-border-secondary: #D1D1D6;
   --chatbox-border-warning: #fab005;
   --chatbox-border-error: #fa5252;
   --chatbox-border-success: #12b886;
   --chatbox-border-brand: var(--chatbox-brand);
 
-  --chatbox-background-notice: #f9fafb;
-  --chatbox-border-notice: var(--chatbox-border-secondary);
-  --chatbox-shadow-notice: inset 0 4px 8px rgb(255 255 255 / 64%);
-
   --chatbox-background-primary: #ffffff;
-  --chatbox-background-primary-hover: #f8f9fa;
-  --chatbox-background-secondary: #f3f3f3;
-  --chatbox-background-secondary-hover: #e9ecef;
-  --chatbox-background-tertiary: #dee2e6;
-  --chatbox-background-tertiary-hover: #ced4da;
-  --chatbox-background-disabled: #e9ecef;
-  --chatbox-background-grouped: var(--chatbox-background-secondary);
+  --chatbox-background-primary-hover: #F5F5F7;
+  --chatbox-background-secondary: #F5F5F7;
+  --chatbox-background-secondary-hover: #EBEBEF;
+  --chatbox-background-tertiary: #E5E5EA;
+  --chatbox-background-tertiary-hover: #D9D9DE;
+  --chatbox-background-disabled: #F2F2F7;
 
   --chatbox-background-brand-primary: var(--chatbox-brand);
   --chatbox-background-brand-primary-hover: color-mix(in srgb, var(--chatbox-brand), black 12%);
   --chatbox-background-brand-secondary: color-mix(in srgb, var(--chatbox-brand), transparent 92%);
   --chatbox-background-brand-secondary-hover: color-mix(in srgb, var(--chatbox-brand), transparent 84%);
 
-  --chatbox-background-gray-primary: #868e96;
-  --chatbox-background-gray-primary-hover: #495057;
+  --chatbox-background-gray-primary: #86868B;
+  --chatbox-background-gray-primary-hover: #6E6E73;
   --chatbox-background-gray-secondary: rgb(134, 142, 150, 0.1);
   --chatbox-background-gray-secondary-hover: rgb(134, 142, 150, 0.12);
 
-  --chatbox-background-success-primary: #12b886;
-  --chatbox-background-success-primary-hover: #0ca678;
+  --chatbox-background-success-primary: #34C759;
+  --chatbox-background-success-primary-hover: #28B74D;
   --chatbox-background-success-secondary: rgb(18, 184, 134, 0.1);
   --chatbox-background-success-secondary-hover: rgb(18, 184, 134, 0.12);
 
-  --chatbox-background-error-primary: #fa5252;
-  --chatbox-background-error-primary-hover: #f03e3e;
+  --chatbox-background-error-primary: #FF3B30;
+  --chatbox-background-error-primary-hover: #D70015;
   --chatbox-background-error-secondary: rgb(250, 82, 82, 0.1);
   --chatbox-background-error-secondary-hover: rgb(250, 82, 82, 0.12);
 
-  --chatbox-background-warning-primary: #fab005;
-  --chatbox-background-warning-primary-hover: #f59f00;
+  --chatbox-background-warning-primary: #FF9F0A;
+  --chatbox-background-warning-primary-hover: #E68A00;
   --chatbox-background-warning-secondary: rgb(250, 176, 5, 0.1);
   --chatbox-background-warning-secondary-hover: rgb(250, 176, 5, 0.12);
 
   --chatbox-background-mask-overlay: rgb(59, 59, 59, 0.64);
   --chatbox-background-mask-lighten: rgb(255, 255, 255, 0.76);
+  --chatbox-input-border: rgba(255, 255, 255, 0.65);
 
   /* shadcn semantic colors */
   --background: var(--chatbox-background-primary);
@@ -113,100 +83,68 @@
   --ring: var(--chatbox-tint-brand);
 }
 
-/* Dark layers are derived from the user's theme-color surfaces (sunken shell, raised
-   controls, hover), borders and gray fills are translucent white over those surfaces, and
-   text tints are one neutral gray scale. */
 :root[data-mantine-color-scheme="dark"] {
   /* colors */
-  --chatbox-tint-primary: #ececec;
-  --chatbox-tint-secondary: #bdbdbd;
-  --chatbox-tint-tertiary: #999999;
+  --chatbox-tint-primary: #ffffff;
+  --chatbox-tint-secondary: #AEAEB2;
+  --chatbox-tint-tertiary: #98989D;
 
   --chatbox-tint-white: #ffffff;
   --chatbox-tint-black: #000000;
-  --chatbox-tint-gray: #999999;
+  --chatbox-tint-gray: #98989D;
 
-  --chatbox-tint-disabled: #5f5f5f;
-  --chatbox-brand: #228be6;
-  /* Brand text and icons sit on dark surfaces, so they use a lifted brand; fills keep the brand itself. */
-  --chatbox-tint-brand: color-mix(in srgb, var(--chatbox-brand), white 30%);
-  --chatbox-tint-placeholder: #999999;
-  --chatbox-tint-error: #ff6b6b;
-  --chatbox-tint-error-disabled: rgb(255, 107, 107, 0.5);
-  --chatbox-tint-warning: #ffd43b;
-  --chatbox-tint-success: #63e6be;
+  --chatbox-tint-disabled: #636366;
+  --chatbox-brand: #0A84FF;
+  --chatbox-tint-brand: var(--chatbox-brand);
+  --chatbox-tint-placeholder: #98989D;
+  --chatbox-tint-error: #FF453A;
+  --chatbox-tint-error-disabled: rgba(255, 69, 58, 0.5);
+  --chatbox-tint-warning: #FFD60A;
+  --chatbox-tint-success: #30D158;
 
-  --chatbox-border-primary: rgb(255 255 255 / 12%);
-  --chatbox-border-secondary: rgb(255 255 255 / 24%);
-  --chatbox-border-warning: #ffd43b;
-  --chatbox-border-error: #ff6b6b;
+  --chatbox-border-primary: #3A3A3C;
+  --chatbox-border-secondary: #48484A;
+  --chatbox-border-warning: #ffe066;
+  --chatbox-border-error: #f03e3e;
   --chatbox-border-success: #63e6be;
   --chatbox-border-brand: var(--chatbox-brand);
 
-  --chatbox-background-notice: var(--chatbox-background-primary);
-  --chatbox-border-notice: var(--chatbox-border-primary);
-  --chatbox-shadow-notice: inset 0 4px 8px rgb(255 255 255 / 3%);
-
-  --chatbox-background-primary: #242424;
-  /* Also the shell and sidebar background on wide layouts, so it sits below the primary surface. */
-  --chatbox-background-primary-hover: color-mix(in srgb, var(--chatbox-background-primary), black 14%);
-  --chatbox-background-secondary: #3b3b3b;
-  --chatbox-background-secondary-hover: color-mix(in srgb, var(--chatbox-background-secondary), white 7%);
-  --chatbox-background-tertiary: #424242;
-  --chatbox-background-tertiary-hover: color-mix(in srgb, var(--chatbox-background-tertiary), white 9%);
-  --chatbox-background-disabled: color-mix(in srgb, var(--chatbox-background-primary), white 4%);
-  /* Page behind grouped cards: one step below the primary surface, so cards read as raised. */
-  --chatbox-background-grouped: color-mix(in srgb, var(--chatbox-background-primary), black 32%);
+  --chatbox-background-primary: #1C1C1E;
+  --chatbox-background-primary-hover: #2C2C2E;
+  --chatbox-background-secondary: #2C2C2E;
+  --chatbox-background-secondary-hover: #3A3A3C;
+  --chatbox-background-tertiary: #3A3A3C;
+  --chatbox-background-tertiary-hover: #48484A;
+  --chatbox-background-disabled: #2C2C2E;
 
   --chatbox-background-brand-primary: var(--chatbox-brand);
   --chatbox-background-brand-primary-hover: color-mix(in srgb, var(--chatbox-brand), black 12%);
-  --chatbox-background-brand-secondary: color-mix(in srgb, var(--chatbox-brand), transparent 86%);
-  --chatbox-background-brand-secondary-hover: color-mix(in srgb, var(--chatbox-brand), transparent 80%);
+  --chatbox-background-brand-secondary: color-mix(in srgb, var(--chatbox-brand), transparent 80%);
+  --chatbox-background-brand-secondary-hover: color-mix(in srgb, var(--chatbox-brand), transparent 76%);
 
-  --chatbox-background-gray-primary: rgb(255 255 255 / 16%);
-  --chatbox-background-gray-primary-hover: rgb(255 255 255 / 22%);
-  --chatbox-background-gray-secondary: rgb(255 255 255 / 7%);
-  --chatbox-background-gray-secondary-hover: rgb(255 255 255 / 11%);
+  --chatbox-background-gray-primary: #3A3A3C;
+  --chatbox-background-gray-primary-hover: #48484A;
+  --chatbox-background-gray-secondary: rgb(134, 142, 150, 0.15);
+  --chatbox-background-gray-secondary-hover: rgb(134, 142, 150, 0.2);
 
-  --chatbox-background-success-primary: #099268;
-  --chatbox-background-success-primary-hover: #087f5b;
+  --chatbox-background-success-primary: #248A3D;
+  --chatbox-background-success-primary-hover: #1F7A36;
   --chatbox-background-success-secondary: rgb(18, 184, 134, 0.15);
   --chatbox-background-success-secondary-hover: rgb(18, 184, 134, 0.2);
 
-  --chatbox-background-error-primary: #e03131;
-  --chatbox-background-error-primary-hover: #c92a2a;
+  --chatbox-background-error-primary: #FF453A;
+  --chatbox-background-error-primary-hover: #D70015;
   --chatbox-background-error-secondary: rgb(250, 82, 82, 0.15);
   --chatbox-background-error-secondary-hover: rgb(250, 82, 82, 0.2);
 
-  --chatbox-background-warning-primary: #f08c00;
-  --chatbox-background-warning-primary-hover: #e67700;
+  --chatbox-background-warning-primary: #E68A00;
+  --chatbox-background-warning-primary-hover: #CC7A00;
   --chatbox-background-warning-secondary: rgb(250, 176, 5, 0.15);
   --chatbox-background-warning-secondary-hover: rgb(250, 176, 5, 0.2);
 
-  --chatbox-background-mask-overlay: rgb(0 0 0 / 60%);
-  --chatbox-background-mask-lighten: rgb(255 255 255 / 14%);
-}
-
-/* Mantine's own dark semantics follow the Chatbox tokens, so unstyled Mantine text, default
-   buttons and borders match the rest of the UI and the selected theme color. */
-:root[data-mantine-color-scheme="dark"][data-mantine-color-scheme] {
-  --mantine-color-body: var(--chatbox-background-primary);
-  --mantine-color-text: var(--chatbox-tint-primary);
-  --mantine-color-dimmed: var(--chatbox-tint-tertiary);
-  --mantine-color-placeholder: var(--chatbox-tint-placeholder);
-  --mantine-color-default: color-mix(in srgb, var(--chatbox-background-primary), white 4%);
-  --mantine-color-default-hover: color-mix(in srgb, var(--chatbox-background-primary), white 9%);
-  --mantine-color-default-color: var(--chatbox-tint-primary);
-  --mantine-color-default-border: var(--chatbox-border-primary);
-}
-
-/* Mantine's dark inputs read its fixed dark palette directly; point them at the same tokens. */
-:root[data-mantine-color-scheme="dark"] .mantine-Input-wrapper {
-  --input-disabled-bg: var(--chatbox-background-disabled);
-}
-:root[data-mantine-color-scheme="dark"] .mantine-Input-wrapper[data-variant="default"] {
-  --input-bg: var(--mantine-color-default);
-  --input-bd: var(--chatbox-border-primary);
+  --chatbox-background-mask-overlay: rgb(31, 31, 31, 0.78);
+  --chatbox-background-mask-lighten: rgb(173, 181, 189, 0.48);
+  --chatbox-input-border: rgba(255, 255, 255, 0.12);
 }
 
 :root[data-mantine-color-scheme="light"][data-mantine-color-scheme],
