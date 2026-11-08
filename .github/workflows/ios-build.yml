@@ -7,6 +7,10 @@ name: Build iOS IPA
 on:
   workflow_dispatch:
     inputs:
+      source_repo:
+        description: '源码仓库（fork 不含 tag，默认从上游拉）'
+        required: true
+        default: 'chatboxai/chatbox'
       ref:
         description: '要打包的 tag / 分支'
         required: true
@@ -49,6 +53,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          repository: ${{ inputs.source_repo }}
           ref: ${{ inputs.ref }}
           fetch-depth: 1
 
@@ -64,7 +69,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.33.0
+          # 版本由 package.json 的 packageManager 字段决定，此处不可重复指定
           run_install: false
 
       - name: Setup Node
@@ -97,7 +102,7 @@ jobs:
             appName: '${APP_NAME}',
             webDir: '${WEB_DIR}',
             ios: {
-              contentInset: 'always',
+              contentInset: 'never',
               limitsNavigationsToAppBoundDomains: false,
             },
           }
@@ -114,7 +119,8 @@ jobs:
         run: |
           set -euo pipefail
           pnpm run build:renderer
-          pnpm run delete-sourcemaps
+          # 上游 package.json 指向的 delete-source-maps-runner.js 在 v1.23.5 中不存在，改用 find
+          find "$WEB_DIR" -name "*.map" -delete
           test -f "$WEB_DIR/index.html"
           du -sh "$WEB_DIR"
 
@@ -136,7 +142,7 @@ jobs:
 
       # ---------- 未签名构建 ----------
       - name: Archive (unsigned)
-        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 == '' }}
+        if: env.HAS_CERT != 'true'
         run: |
           set -euo pipefail
           xcodebuild \
@@ -153,7 +159,7 @@ jobs:
             archive
 
       - name: Package unsigned IPA
-        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 == '' }}
+        if: env.HAS_CERT != 'true'
         run: |
           set -euo pipefail
           APP_PATH="build/App.xcarchive/Products/Applications/App.app"
@@ -165,7 +171,7 @@ jobs:
 
       # ---------- 签名构建（需配置 secrets） ----------
       - name: Install signing certificate & profile
-        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 != '' }}
+        if: env.HAS_CERT == 'true'
         env:
           CERT_B64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
           CERT_PWD: ${{ secrets.P12_PASSWORD }}
@@ -187,7 +193,7 @@ jobs:
           echo "$PROFILE_B64" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
 
       - name: Archive (signed)
-        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 != '' }}
+        if: env.HAS_CERT == 'true'
         env:
           TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           EXPORT_METHOD: ${{ inputs.export_method }}
@@ -205,7 +211,7 @@ jobs:
             archive
 
       - name: Export signed IPA
-        if: ${{ secrets.BUILD_CERTIFICATE_BASE64 != '' }}
+        if: env.HAS_CERT == 'true'
         env:
           TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           EXPORT_METHOD: ${{ inputs.export_method }}
