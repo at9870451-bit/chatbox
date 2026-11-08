@@ -13,3 +13,9 @@ export const INPUT_SURFACE_CLASS_NAME =
 export const INPUT_SURFACE_MIN_HEIGHT_CLASS_NAME = 'min-h-[92px]'
 
 export const INPUT_SURFACE_STYLE = { borderWidth: '0.5px' }
+
+export const INPUT_PAYLOAD_MAX_HEIGHT = 'min(200px, 30vh)'
+
+/** Send button while submitting is blocked: keeps the button shape visible without the brand fill. */
+export const SEND_BUTTON_BLOCKED_CLASS =
+  'disabled:!opacity-100 !bg-chatbox-background-tertiary !text-chatbox-tint-white'
