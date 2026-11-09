@@ -545,13 +545,6 @@ div[data-vaul-drawer] {
   border-color: rgba(255, 255, 255, 0.12);
 }
 
-/* ---------- 聊天消息间距 ---------- */
-.msg-block + .msg-block {
-  margin-top: 10px;
-}
+/* 聊天消息间距交由原组件布局控制 */
 
-/* 普通卡片统一 */
-.mantine-Paper-root {
-  box-shadow: var(--lg-shadow-card);
-  border-radius: 20px;
-}
+/* 普通卡片统一（限定轻量场景，避免全局影响） */

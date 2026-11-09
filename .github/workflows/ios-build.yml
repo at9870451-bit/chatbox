@@ -243,6 +243,14 @@ jobs:
           find build -name "*.ipa" -exec cp {} dist/ \; 2>/dev/null || true
           ls -lh dist || true
 
+      - name: Upload web preview (for visual check)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chatbox-web-preview
+          path: release/app/dist/renderer
+          retention-days: 7
+
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         if: always()
