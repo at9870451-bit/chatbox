@@ -48,23 +48,23 @@
   }
 }
 
-/* Bubble layout: ensure user message links match bubble text color (white on brand background) */
+/* Bubble layout: Apple 浅色气泡下链接使用系统蓝 */
 .bubble-user-msg .msg-content a {
-  color: var(--chatbox-tint-white);
-  text-decoration: underline;
+  color: var(--chatbox-tint-brand);
+  text-decoration: none;
 }
 
 .bubble-user-msg .msg-content a:visited {
-  color: var(--chatbox-tint-white);
+  color: var(--chatbox-tint-brand);
 }
 
 .bubble-user-msg .msg-content a:hover {
-  color: var(--chatbox-tint-white);
+  color: var(--chatbox-tint-brand);
   text-decoration: underline;
 }
 
 .bubble-user-msg .msg-content .inline-code {
-  background-color: color-mix(in srgb, #3b3b3b 30%, transparent);
+  background-color: color-mix(in srgb, var(--chatbox-tint-secondary) 15%, transparent);
 }
 
 .code-block-container,

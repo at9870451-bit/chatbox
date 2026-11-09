@@ -460,7 +460,7 @@ function Index() {
           ) : (
             <Stack align="center" justify="center" gap="sm" className="min-h-full">
               <HomepageIcon className="h-8" />
-              <Text fw="600" size={isSmallScreen ? 'sm' : 'md'}>
+              <Text className="apple-welcome-title">
                 {t('What can I help you with today?')}
               </Text>
             </Stack>

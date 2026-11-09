@@ -1,5 +1,5 @@
 import NiceModal from '@ebay/nice-modal-react'
-import { ActionIcon, Flex, Text } from '@mantine/core'
+import { ActionIcon, Box, Flex, Text } from '@mantine/core'
 import type { Session } from '@shared/types'
 import { IconLayoutSidebarLeftExpand, IconMenu2 } from '@tabler/icons-react'
 import clsx from 'clsx'
@@ -44,15 +44,17 @@ export default function Header(props: { session: Session }) {
         h={48}
         align="center"
         px="md"
-        className={clsx('flex-none title-bar border-0', isSmallScreen ? 'bg-chatbox-background-primary' : '')}
+        className={clsx('flex-none title-bar border-0 apple-topbar', isSmallScreen ? 'mx-3 mt-2' : '')}
       >
         {(!showSidebar || isSmallScreen) && (
           <Flex align="center" className={needRoomForMacWindowControls ? 'pl-20' : ''}>
             <ActionIcon
               className="controls"
               variant="subtle"
-              size={isSmallScreen ? 24 : 20}
-              color={isSmallScreen ? 'chatbox-secondary' : 'chatbox-tertiary'}
+              radius="xl"
+              size={isSmallScreen ? 34 : 26}
+              color="chatbox-secondary"
+              bg="rgba(120,120,128,0.08)"
               mr="xs"
               onClick={() => setShowSidebar(!showSidebar)}
             >
@@ -93,7 +95,7 @@ export default function Header(props: { session: Session }) {
         <WindowControls className="-mr-3 ml-2" />
       </Flex>
 
-      {isSmallScreen && <Divider />}
+      {isSmallScreen && <Box h={6} />}
     </>
   )
 }

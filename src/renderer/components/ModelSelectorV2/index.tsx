@@ -579,7 +579,7 @@ export const ModelSelectorV2 = forwardRef<HTMLDivElement, ModelSelectorV2Props>(
                 <Stack
                   gap={0}
                   className={clsx(
-                    'max-h-[88vh] rounded-t-[16px] border border-b-0 border-solid',
+                    'apple-sheet max-h-[88vh] rounded-t-[24px] border border-b-0 border-solid',
                     MODEL_SELECTOR_SURFACE_CLASS
                   )}
                   style={DRAWER_SURFACE_STYLE}

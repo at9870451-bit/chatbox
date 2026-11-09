@@ -822,9 +822,9 @@ const _Message: FC<Props> = (props) => {
               : 'inline-block max-w-full min-w-0',
           isBubbleLayout
             ? cn(
-                'px-4 py-1 rounded-lg',
+                'px-4 py-1 rounded-[20px]',
                 msg.role === 'user'
-                  ? 'bg-[var(--mantine-color-chatbox-brand-filled)] text-white'
+                  ? 'bg-[var(--chatbox-background-primary)] border-[0.5px] border-solid border-[var(--chatbox-border-primary)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] text-[var(--chatbox-tint-primary)]'
                   : msg.role === 'assistant'
                     ? msg.error
                       ? isErrorReminder

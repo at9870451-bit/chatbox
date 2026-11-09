@@ -25,7 +25,7 @@ export const Page: FC<PageProps> = ({ children, title, left, right }) => {
         h={48}
         align="center"
         px="md"
-        className={clsx('title-bar', isSmallScreen ? 'bg-chatbox-background-primary' : '')}
+        className={clsx('title-bar apple-topbar', isSmallScreen ? 'mx-3 mt-2' : '')}
       >
         {left ||
           ((!showSidebar || isSmallScreen) && (
@@ -33,8 +33,10 @@ export const Page: FC<PageProps> = ({ children, title, left, right }) => {
               <ActionIcon
                 className="controls"
                 variant="subtle"
-                size={isSmallScreen ? 24 : 20}
-                color={isSmallScreen ? 'chatbox-secondary' : 'chatbox-tertiary'}
+                radius="xl"
+                size={isSmallScreen ? 34 : 26}
+                color="chatbox-secondary"
+                bg="rgba(120,120,128,0.08)"
                 mr="xs"
                 onClick={() => setShowSidebar(!showSidebar)}
               >
