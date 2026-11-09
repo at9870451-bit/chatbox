@@ -24,11 +24,11 @@ export function ChatboxWelcomeCard(props: { mode: HomeWelcomeCardMode; pageName:
 
   return (
     <Paper
-      radius="lg"
+      radius={24}
       withBorder
       py="md"
-      px="sm"
-      className={`bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md ${className || ''}`}
+      px="md"
+      className={`apple-glass-card ${className || ''}`}
     >
       <Stack gap="sm">
         <Stack gap="xxs" align="center">

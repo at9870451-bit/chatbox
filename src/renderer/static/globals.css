@@ -460,3 +460,179 @@ div[data-vaul-drawer] {
 .chatbox-action-bar-pulse-alt {
   animation: chatbox-action-bar-pulse 600ms ease-out 2;
 }
+
+/* ================================================================
+   Apple Liquid Glass 设计系统（全局）
+   规范：白 82-90% + 真实模糊 + 细腻边框 + Apple 轻阴影 + 8pt 间距
+   ================================================================ */
+
+:root {
+  /* 玻璃参数 */
+  --lg-topbar-bg: rgba(255, 255, 255, 0.82);
+  --lg-topbar-blur: 25px;
+  --lg-bottombar-bg: rgba(255, 255, 255, 0.82);
+  --lg-bottombar-blur: 30px;
+  --lg-input-bg: rgba(255, 255, 255, 0.85);
+  --lg-input-blur: 30px;
+  --lg-tools-bg: rgba(255, 255, 255, 0.9);
+  --lg-tools-blur: 25px;
+  --lg-model-bg: rgba(255, 255, 255, 0.9);
+  --lg-model-blur: 28px;
+  --lg-fab-bg: rgba(255, 255, 255, 0.85);
+  --lg-fab-blur: 20px;
+
+  /* 统一阴影档位 */
+  --lg-shadow-card: 0 3px 12px rgba(0, 0, 0, 0.04);
+  --lg-shadow-card-prominent: 0 4px 16px rgba(0, 0, 0, 0.05);
+  --lg-shadow-topbar: 0 5px 18px rgba(0, 0, 0, 0.05);
+  --lg-shadow-bottombar: 0 8px 24px rgba(0, 0, 0, 0.07);
+  --lg-shadow-input: 0 5px 20px rgba(0, 0, 0, 0.06);
+  --lg-shadow-popover: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+:root[data-mantine-color-scheme="dark"] {
+  --lg-topbar-bg: rgba(28, 28, 30, 0.82);
+  --lg-bottombar-bg: rgba(28, 28, 30, 0.82);
+  --lg-input-bg: rgba(28, 28, 30, 0.85);
+  --lg-tools-bg: rgba(28, 28, 30, 0.9);
+  --lg-model-bg: rgba(28, 28, 30, 0.9);
+  --lg-fab-bg: rgba(28, 28, 30, 0.85);
+  --lg-shadow-card: 0 3px 12px rgba(0, 0, 0, 0.3);
+  --lg-shadow-card-prominent: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --lg-shadow-topbar: 0 5px 18px rgba(0, 0, 0, 0.35);
+  --lg-shadow-bottombar: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --lg-shadow-input: 0 5px 20px rgba(0, 0, 0, 0.4);
+  --lg-shadow-popover: 0 8px 22px rgba(0, 0, 0, 0.45);
+}
+
+/* ---------- 顶部悬浮玻璃导航 ---------- */
+.apple-topbar {
+  background: var(--lg-topbar-bg);
+  -webkit-backdrop-filter: blur(var(--lg-topbar-blur)) saturate(1.6);
+  backdrop-filter: blur(var(--lg-topbar-blur)) saturate(1.6);
+  border: 0.5px solid rgba(255, 255, 255, 0.65);
+  border-radius: 18px;
+  box-shadow: var(--lg-shadow-topbar);
+}
+
+/* 圆形菜单按钮 */
+.apple-round-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(120, 120, 128, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+:root[data-mantine-color-scheme="dark"] .apple-round-btn {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- 聊天消息间距与操作行 ---------- */
+.msg-block {
+  margin-block: 6px;
+}
+.msg-block + .msg-block {
+  margin-top: 10px;
+}
+
+/* AI 回复操作行：默认弱化，hover/选中时显现 */
+.msg-block .action-row-enter {
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
+.msg-block:hover .action-row-enter,
+.msg-block:focus-within .action-row-enter {
+  opacity: 1;
+}
+
+/* 用户气泡：苹果浅色轻量气泡 */
+.bubble-user-msg > div > div > div:first-child > div:first-child {
+  border-radius: 20px;
+}
+
+/* ---------- 欢迎/空状态大标题 ---------- */
+.apple-welcome-title {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--chatbox-tint-primary);
+}
+.apple-welcome-subtitle {
+  font-size: 15px;
+  color: var(--chatbox-tint-secondary);
+}
+
+/* ---------- 快捷提问卡片（新用户场景网格） ---------- */
+.apple-scenario-card {
+  border-radius: 20px;
+  background: var(--chatbox-background-primary);
+  border: 0.5px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--lg-shadow-card);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.apple-scenario-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--lg-shadow-card-prominent);
+  background: color-mix(in srgb, var(--chatbox-brand) 4%, var(--chatbox-background-primary));
+}
+:root[data-mantine-color-scheme="dark"] .apple-scenario-card {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- 侧边栏会话项：白底 + 圆角 + 悬停层级 ---------- */
+.apple-session-item {
+  border-radius: 12px;
+  transition: background 0.12s ease;
+}
+.apple-session-item:hover {
+  background: var(--chatbox-background-primary-hover);
+}
+.apple-session-item.active,
+.apple-session-item[data-active="true"] {
+  background: color-mix(in srgb, var(--chatbox-brand) 8%, var(--chatbox-background-primary));
+}
+
+/* ---------- 玻璃 Sheet（vaul 底部抽屉 / Mantine Modal 通用） ---------- */
+.apple-sheet,
+[data-vaul-drawer] > div {
+  background: var(--lg-model-bg);
+  -webkit-backdrop-filter: blur(var(--lg-model-blur)) saturate(1.6);
+  backdrop-filter: blur(var(--lg-model-blur)) saturate(1.6);
+}
+
+/* Mantine Modal / Popover 弹层玻璃化 */
+.mantine-Modal-root .mantine-Modal-content,
+.mantine-Popover-dropdown,
+.mantine-Menu-dropdown {
+  background: var(--lg-model-bg);
+  -webkit-backdrop-filter: blur(var(--lg-tools-blur)) saturate(1.6);
+  backdrop-filter: blur(var(--lg-tools-blur)) saturate(1.6);
+  box-shadow: var(--lg-shadow-popover);
+  border: 0.5px solid rgba(255, 255, 255, 0.65);
+}
+:root[data-mantine-color-scheme="dark"] .mantine-Modal-root .mantine-Modal-content,
+:root[data-mantine-color-scheme="dark"] .mantine-Popover-dropdown,
+:root[data-mantine-color-scheme="dark"] .mantine-Menu-dropdown {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ---------- 普通卡片统一（Paper / Card） ---------- */
+.mantine-Paper-root {
+  box-shadow: var(--lg-shadow-card);
+  border-radius: 20px;
+}
+
+/* ---------- 玻璃卡片（欢迎卡等） ---------- */
+.apple-glass-card {
+  background: var(--lg-tools-bg);
+  -webkit-backdrop-filter: blur(var(--lg-tools-blur)) saturate(1.6);
+  backdrop-filter: blur(var(--lg-tools-blur)) saturate(1.6);
+  border: 0.5px solid rgba(255, 255, 255, 0.65);
+  border-radius: 24px;
+  box-shadow: var(--lg-shadow-card-prominent);
+}
+:root[data-mantine-color-scheme="dark"] .apple-glass-card {
+  border-color: rgba(255, 255, 255, 0.12);
+}

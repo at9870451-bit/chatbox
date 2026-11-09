@@ -583,7 +583,7 @@ export const ModelSelectorV2 = forwardRef<HTMLDivElement, ModelSelectorV2Props>(
                 <Stack
                   gap={0}
                   className={clsx(
-                    'max-h-[88vh] rounded-t-[16px] border border-b-0 border-solid',
+                    'apple-sheet max-h-[88vh] rounded-t-[24px] border border-b-0 border-solid',
                     MODEL_SELECTOR_SURFACE_CLASS
                   )}
                   style={DRAWER_SURFACE_STYLE}
@@ -609,7 +609,7 @@ export const ModelSelectorV2 = forwardRef<HTMLDivElement, ModelSelectorV2Props>(
               <Drawer.Content className="fixed bottom-0 left-0 right-0 outline-none">
                 <Stack
                   gap={0}
-                  className={clsx('rounded-t-[16px] border border-b-0 border-solid', MODEL_SELECTOR_SURFACE_CLASS)}
+                  className={clsx('apple-sheet rounded-t-[24px] border border-b-0 border-solid', MODEL_SELECTOR_SURFACE_CLASS)}
                   style={DRAWER_SURFACE_STYLE}
                 >
                   <div aria-hidden className="mx-auto my-3 h-1 w-14 rounded-full bg-chatbox-tint-tertiary opacity-70" />

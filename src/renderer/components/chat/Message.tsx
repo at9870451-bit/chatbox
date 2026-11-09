@@ -1485,14 +1485,14 @@ export const MessageActionIcon = forwardRef<
       mih={touchSize}
       p={isSmallScreen ? 0 : 4}
       bd={0}
-      color="chatbox-secondary"
+      color="chatbox-tertiary"
       aria-label={tooltip ?? undefined}
       data-testid={testId}
       {...props}
     >
       <ScalableIcon
         icon={icon}
-        size={isSmallScreen ? 20 : ICON_SIZE.inline}
+        size={isSmallScreen ? 19 : ICON_SIZE.inline - 1}
         strokeWidth={ICON_STROKE_WIDTH}
         className={iconClassName}
       />
